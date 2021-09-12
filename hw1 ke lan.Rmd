@@ -1,0 +1,84 @@
+---
+title: "homework 1"
+author: "Ke Lan"
+date: "9/10/2021"
+output:
+  pdf_document: default
+  html_document: default
+
+---
+title: "MA [46]15 Homework 1"
+author: "Ke Lan"
+output: github_document
+---
+
+In this homework I'm analyzing the `msleep` dataset from package `ggplot2`.
+I start by loading the packages:
+
+```{r init}
+library(tidyverse)
+msleep
+```
+
+**`[==[`**
+Note: instructions are framed with bold `[==[` and `]==]` and should be removed (like this one!) and substituted by answers in the final version of your document. 
+Please don't forget to write your name in the author field above.
+**`]==]`**
+
+
+
+## Question 1
+
+**`[==[`** Change the `q1` chunk to make a log-log plot of `brainwt` against `bodywt`, colored by `vore`.
+Relabel the axes using "weight" instead of "wt" and indicate the units.
+Additionally, relabel "vore" in the legend to be "diet".
+Comment on the relationship between the two variables; in particular, does it seem to be linear after the log transformations? **`]==]`**
+
+
+```{r answer q1}
+ggplot(msleep) + geom_point(aes(x = log(bodywt), y = log(brainwt),color = vore)) + labs(x = "log(body weight [kilograms])",y="log(brain weight [kilograms])",color = "diet") 
+```
+
+I observed a positive linear relationship between body weight and brain weight after log transformation, meaning that after solving the skewness of the original data set, the linearity between two variables is observed.
+
+
+
+## Question 2
+
+**`[==[`** Change the `q2` chunk to log transform `bodywt` and have horizontal boxplots.
+Add in the `varwidth = TRUE` option to `geom_boxplot` and color the boxplots as in Question 1.
+Relabel the axes with "more informative" labels.
+Comment on the relationship between "diet" and size of mammal. **`]==]`**
+
+```{r answer q2}
+ggplot(msleep) + geom_boxplot(aes(x = vore, y = log(bodywt),color = vore), varwidth = TRUE) + labs(x = "diet", y = "log(body weights [kilograms])",color = "diet")
+```
+Carni animals overall have the highest body weights(sizes), following by herbi animals and omni animals, and animals with undefined diet behaviors and insecti animals have less body weights(sizes).
+
+My understanding is: carni animals intake the most nutritions, and herbi animals intake relatively less but more than insecti animals, and omni animals, as their names suggest, have a mix diet habit of carni/herbi/insecti. (dietomni = a*dietcarni + b*dietherbi+c*dietinsecti a+b+c = 1) as we can see from the graph, carni has the most mean body weights and the distribution is the highest, followed by herbi, and insecti; omni is somewhere in between. so the more nutritious the diet habit is, the higher body weight for this animal.
+
+## Question 3
+
+**`[==[`**
+Change the `q3` chunk to plot the *fraction of sleep per day* by conservation status, colored by `vore`, and jittered to avoid overplotting. Moreover, add *blue* crossbars with mean at the center and box limits at minimum and maximum.
+Improve the axes labels.
+Look up "conservation status" in Wikipedia and comment on any pattern in fraction of sleep if species are less or more endangered.
+**`]==]`**
+
+
+```{r answer q3}
+ggplot(data = msleep,aes(x = conservation, y = sleep_total/24,color = vore)) + geom_point(position = "jitter")+ stat_summary(fun = mean, fun.min = min, fun.max = max, geom = "pointrange", color = "blue") + labs(x = "conservation status", y = "sleep fraction",color = "diet")
+```
+cd means conservation depended, domesticated means domesticated, en means endangered, lc means less concerned, nt means near threatened, vu means vulnerable, and if ordering by the degree of endanger-ness, it should be en/vu (threatened) > nt/cd/lc (lower risk)> domesticated. 
+
+I believe there is no significant statistical relationship between conservation status and sleep fraction (and hours of sleep), since nt and lc status animals have relatively high fraction, but they are at lower risk, while cd, another lower risk category, have low sleep fraction. 
+
+## Question 4
+
+**`[==[`** Substitute the command in chunk `q4` by a `ggplot` R command that would actually generate the figure. **`]==]`**
+
+```{r answer q4}
+ggplot(msleep)+geom_bar(aes(x=conservation, fill = vore))+coord_polar()
+```
+
+
